@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
+import UniversityCourseModal from './UniversityCourseModal';
 
-export default function CareerCard({ career, isPrimaryGoal }) {
+export default function CareerCard({ career, isPrimaryGoal, universityCourses = [] }) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showCourseModal, setShowCourseModal] = useState(false);
     const { post, processing } = useForm();
 
     const handleSetPrimaryGoal = (e) => {
@@ -124,7 +126,13 @@ export default function CareerCard({ career, isPrimaryGoal }) {
                         >
                             {processing ? 'Setting...' : isPrimaryGoal ? 'Primary Goal' : 'Set as Primary Goal'}
                         </button>
-                        <button className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowCourseModal(true);
+                            }}
+                            className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium"
+                        >
                             Learn More
                         </button>
                     </div>
@@ -144,6 +152,14 @@ export default function CareerCard({ career, isPrimaryGoal }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
+
+            {/* University Course Modal */}
+            <UniversityCourseModal
+                isOpen={showCourseModal}
+                onClose={() => setShowCourseModal(false)}
+                careerTitle={career.title}
+                courses={universityCourses}
+            />
         </div>
     );
 }

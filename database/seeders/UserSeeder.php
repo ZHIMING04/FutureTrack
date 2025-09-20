@@ -94,7 +94,8 @@ class UserSeeder extends Seeder
             ['question_number' => 1, 'question' => 'I enjoy working with computers and technology', 'category' => 'Activities', 'answer' => 'Strongly Agree', 'answered_at' => now()],
             ['question_number' => 2, 'question' => 'I like solving complex problems', 'category' => 'Activities', 'answer' => 'Agree', 'answered_at' => now()],
             ['question_number' => 3, 'question' => 'I prefer working in teams', 'category' => 'Activities', 'answer' => 'Neutral', 'answered_at' => now()],
-            // Add more questions as needed
+            ['question_number' => 4, 'question' => 'I am interested in analyzing data and finding patterns', 'category' => 'Interests', 'answer' => 'Agree', 'answered_at' => now()],
+            ['question_number' => 5, 'question' => 'I enjoy learning new programming languages and technologies', 'category' => 'Learning', 'answer' => 'Strongly Agree', 'answered_at' => now()]
         ];
 
         foreach ($questions as $question) {

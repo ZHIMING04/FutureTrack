@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             ResourceSeeder::class,
             RoadmapPhaseSeeder::class,
+            UniversityCourseSeeder::class,
         ]);
     }
 }

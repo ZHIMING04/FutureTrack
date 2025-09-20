@@ -21,6 +21,7 @@ class CourseSeeder extends Seeder
                 'skills_covered' => ['Python', 'SQL', 'Statistics', 'Data Analysis'],
                 'difficulty_level' => 'Beginner',
                 'is_active' => true,
+                'is_featured' => true,
             ],
             [
                 'title' => 'Business Communication Bundle',
@@ -33,6 +34,7 @@ class CourseSeeder extends Seeder
                 'skills_covered' => ['Communication', 'Public Speaking', 'Critical Thinking'],
                 'difficulty_level' => 'Beginner',
                 'is_active' => true,
+                'is_featured' => true,
             ],
             [
                 'title' => 'Python Basics for Data Science',
@@ -45,6 +47,7 @@ class CourseSeeder extends Seeder
                 'skills_covered' => ['Python', 'Data Analysis', 'Programming'],
                 'difficulty_level' => 'Beginner',
                 'is_active' => true,
+                'is_featured' => false,
             ],
             [
                 'title' => 'SQL for Beginners',
@@ -57,6 +60,7 @@ class CourseSeeder extends Seeder
                 'skills_covered' => ['SQL', 'Database Management', 'Data Queries'],
                 'difficulty_level' => 'Beginner',
                 'is_active' => true,
+                'is_featured' => false,
             ],
             [
                 'title' => 'Statistics Fundamentals',
@@ -69,6 +73,7 @@ class CourseSeeder extends Seeder
                 'skills_covered' => ['Statistics', 'Data Analysis', 'Research Methods'],
                 'difficulty_level' => 'Intermediate',
                 'is_active' => true,
+                'is_featured' => false,
             ],
         ];
 
