@@ -1,11 +1,11 @@
-import { Link } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 
 export default function Sidebar({ navigationItems }) {
     return (
         <div className="w-64 bg-white shadow-lg h-screen flex flex-col sticky top-0 overflow-y-auto">
             {/* Logo Section */}
             <div className="p-4 border-b border-gray-200">
-                <h1 className="text-xl font-bold text-blue-600">NexScholar</h1>
+                <h1 className="text-xl font-bold text-blue-600">FutureTrack</h1>
                 <p className="text-xs text-gray-500 mt-1">Student Pathway Dashboard</p>
             </div>
 
@@ -30,10 +30,10 @@ export default function Sidebar({ navigationItems }) {
                 <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Navigation</h3>
                 <nav className="space-y-0.5">
                     {navigationItems.map((item) => (
-                        <Link
+                        <button
                             key={item.id}
-                            href="#"
-                            className={`group flex items-center px-2 py-1.5 text-xs font-medium rounded-lg transition-colors duration-200 ${
+                            onClick={() => router.visit(item.href)}
+                            className={`group flex items-center px-2 py-1.5 text-xs font-medium rounded-lg transition-colors duration-200 w-full text-left ${
                                 item.active
                                     ? 'bg-blue-600 text-white'
                                     : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
@@ -60,7 +60,7 @@ export default function Sidebar({ navigationItems }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
                             )}
-                        </Link>
+                        </button>
                     ))}
                 </nav>
             </div>

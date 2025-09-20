@@ -1,3 +1,5 @@
+import { router } from '@inertiajs/react';
+
 export default function DeadlineCard({ deadlines }) {
     const getStatusColor = (status) => {
         return status === 'urgent' 
@@ -32,7 +34,10 @@ export default function DeadlineCard({ deadlines }) {
                 )}
             </div>
             
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+            <button 
+                onClick={() => router.visit('/applications-deadlines')}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            >
                 View All Deadlines
             </button>
         </div>

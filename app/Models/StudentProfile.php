@@ -11,11 +11,6 @@ class StudentProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'date_of_birth',
-        'gender',
-        'address',
-        'emergency_contact',
-        'personal_statement',
         'interests',
         'skills',
         'achievements',

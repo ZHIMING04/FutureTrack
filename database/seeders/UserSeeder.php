@@ -51,11 +51,6 @@ class UserSeeder extends Seeder
         // Create student profile
         StudentProfile::create([
             'user_id' => $user->id,
-            'date_of_birth' => '2005-08-15',
-            'gender' => 'female',
-            'address' => '123 Jalan Taman Desa, Kuala Lumpur',
-            'emergency_contact' => '+60123456788',
-            'personal_statement' => 'Passionate about technology and data analysis, looking to pursue a career in computer science.',
             'interests' => ['Technology', 'Data Analysis', 'Problem Solving', 'Programming'],
             'skills' => [
                 'Programming' => ['Python', 'HTML/CSS', 'JavaScript (basic)'],

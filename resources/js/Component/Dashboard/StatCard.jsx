@@ -1,4 +1,6 @@
-export default function StatCard({ title, value, description, actionText, icon, color = "blue" }) {
+import { router } from '@inertiajs/react';
+
+export default function StatCard({ title, value, description, actionText, icon, color = "blue", href }) {
     const colorClasses = {
         blue: "bg-blue-100 text-blue-600",
         purple: "bg-purple-100 text-purple-600",
@@ -23,7 +25,10 @@ export default function StatCard({ title, value, description, actionText, icon, 
                 <div className="text-sm text-gray-600">{description}</div>
             </div>
             
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+            <button 
+                onClick={() => href && router.visit(href)}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            >
                 {actionText}
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
