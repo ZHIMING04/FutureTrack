@@ -1,4 +1,10 @@
+import { router } from '@inertiajs/react';
+
 export default function ProfileSummaryCard({ studentType, subjects }) {
+    const handleUpdateProfile = () => {
+        router.visit('/my-profile');
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <div className="mb-4">
@@ -31,7 +37,10 @@ export default function ProfileSummaryCard({ studentType, subjects }) {
                 </div>
             </div>
             
-            <button className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+            <button 
+                onClick={handleUpdateProfile}
+                className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            >
                 Update Profile
             </button>
         </div>

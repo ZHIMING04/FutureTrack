@@ -1,4 +1,6 @@
-export default function QuickActionCard({ title, description, icon, color = "blue" }) {
+import { router } from '@inertiajs/react';
+
+export default function QuickActionCard({ title, description, icon, color = "blue", href }) {
     const colorClasses = {
         blue: "bg-blue-100 text-blue-600",
         purple: "bg-purple-100 text-purple-600",
@@ -22,7 +24,10 @@ export default function QuickActionCard({ title, description, icon, color = "blu
                 <p className="text-sm text-gray-600">{description}</p>
             </div>
             
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+            <button 
+                onClick={() => href && router.visit(href)}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            >
                 Get Started
             </button>
         </div>

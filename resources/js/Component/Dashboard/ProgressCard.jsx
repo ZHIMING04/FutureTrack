@@ -1,4 +1,6 @@
-export default function ProgressCard({ title, progress, completed, total, actionText, icon }) {
+import { router } from '@inertiajs/react';
+
+export default function ProgressCard({ title, progress, completed, total, actionText, icon, href }) {
     return (
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <div className="flex items-center mb-4">
@@ -23,7 +25,10 @@ export default function ProgressCard({ title, progress, completed, total, action
                 </div>
             </div>
             
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+            <button 
+                onClick={() => href && router.visit(href)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            >
                 {actionText}
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
