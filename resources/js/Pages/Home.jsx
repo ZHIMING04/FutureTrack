@@ -1,9 +1,16 @@
 import { Head } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Home() {
+    useEffect(() => {
+        // Redirect to dashboard for now
+        router.visit('/dashboard');
+    }, []);
+
     return (
         <>
-            <Head title="FutureTrack - Your Technology Partner" />
+            <Head title="NexScholar - Student Pathway Dashboard" />
             
             {/* Hero Section */}
             <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center">
