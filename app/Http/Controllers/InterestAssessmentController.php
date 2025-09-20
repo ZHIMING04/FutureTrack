@@ -43,7 +43,20 @@ class InterestAssessmentController extends Controller
                 'category' => 'Activities',
                 'answer' => null
             ],
-            // Add more questions as needed
+            [
+                'id' => 4,
+                'question_number' => 4,
+                'question' => 'I am interested in analyzing data and finding patterns',
+                'category' => 'Interests',
+                'answer' => null
+            ],
+            [
+                'id' => 5,
+                'question_number' => 5,
+                'question' => 'I enjoy learning new programming languages and technologies',
+                'category' => 'Learning',
+                'answer' => null
+            ]
         ];
 
         // Get user's answers
@@ -149,6 +162,20 @@ class InterestAssessmentController extends Controller
                 'category' => 'Activities',
                 'answer' => null
             ],
+            [
+                'id' => 4,
+                'question_number' => 4,
+                'question' => 'I am interested in analyzing data and finding patterns',
+                'category' => 'Interests',
+                'answer' => null
+            ],
+            [
+                'id' => 5,
+                'question_number' => 5,
+                'question' => 'I enjoy learning new programming languages and technologies',
+                'category' => 'Learning',
+                'answer' => null
+            ]
         ];
 
         // Get user's answers

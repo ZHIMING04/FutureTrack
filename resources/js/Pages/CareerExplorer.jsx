@@ -5,7 +5,7 @@ import CareerCard from '../Component/Career/CareerCard';
 import CareerFilters from '../Component/Career/CareerFilters';
 import CareerSearch from '../Component/Career/CareerSearch';
 
-export default function CareerExplorer({ user, careers, filters, navigationItems }) {
+export default function CareerExplorer({ user, careers, filters, universityCourses, navigationItems }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDomain, setSelectedDomain] = useState('');
     const [selectedMatchLevel, setSelectedMatchLevel] = useState('');
@@ -114,6 +114,7 @@ export default function CareerExplorer({ user, careers, filters, navigationItems
                                 key={career.id}
                                 career={career}
                                 isPrimaryGoal={career.isPrimaryGoal}
+                                universityCourses={universityCourses[career.title] || []}
                             />
                         ))}
                     </div>

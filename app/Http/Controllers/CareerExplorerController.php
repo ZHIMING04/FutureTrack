@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Career;
 use App\Models\CareerMatch;
+use App\Models\UniversityCourse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -51,6 +52,15 @@ class CareerExplorerController extends Controller
         $domains = Career::distinct()->pluck('domain')->filter()->values();
         $matchLevels = ['High Match', 'Medium Match', 'Low Match'];
 
+        // Get all university courses grouped by career
+        $universityCourses = UniversityCourse::active()
+            ->orderBy('level')
+            ->orderBy('university_name')
+            ->get()
+            ->groupBy(function($course) {
+                return $course->career_paths[0] ?? 'Other'; // Group by first career path
+            });
+
         $careerData = [
             'user' => [
                 'name' => $user->name,
@@ -60,7 +70,8 @@ class CareerExplorerController extends Controller
             'filters' => [
                 'domains' => $domains,
                 'matchLevels' => $matchLevels
-            ]
+            ],
+            'universityCourses' => $universityCourses
         ];
 
         // Add navigation items
@@ -111,4 +122,5 @@ class CareerExplorerController extends Controller
 
         return redirect()->back()->with('success', 'Primary career goal updated successfully');
     }
+
 }

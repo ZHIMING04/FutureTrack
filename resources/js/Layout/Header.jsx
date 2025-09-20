@@ -23,7 +23,9 @@ export default function Header({ studentProfile, notifications = 3 }) {
                 {/* User Avatar */}
                 <div className="flex items-center">
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-purple-600">{studentProfile.initials}</span>
+                        <span className="text-sm font-medium text-purple-600">
+                            {studentProfile?.initials || 'U'}
+                        </span>
                     </div>
                 </div>
             </div>

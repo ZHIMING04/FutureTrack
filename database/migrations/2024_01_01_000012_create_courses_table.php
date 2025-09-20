@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('skills_covered')->nullable();
             $table->string('difficulty_level')->nullable(); // Beginner, Intermediate, Advanced
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });
     }

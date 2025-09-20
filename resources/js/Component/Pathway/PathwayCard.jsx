@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function PathwayCard({ pathway, isSelected, onSelect }) {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
 
     const getMatchColor = (percentage) => {
         if (percentage >= 70) return 'text-green-600 bg-green-100';
@@ -27,10 +27,9 @@ export default function PathwayCard({ pathway, isSelected, onSelect }) {
 
     return (
         <div 
-            className={`bg-white rounded-lg shadow-md border-2 transition-all duration-200 cursor-pointer ${
+            className={`bg-white rounded-lg shadow-md border-2 transition-all duration-200 ${
                 isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
             }`}
-            onClick={() => setIsExpanded(!isExpanded)}
         >
             {/* Header */}
             <div className="p-6">
@@ -83,99 +82,127 @@ export default function PathwayCard({ pathway, isSelected, onSelect }) {
                     </div>
                 </div>
 
-                {/* Pros and Cons Preview */}
+                {/* Pros and Cons */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <div className="font-medium text-green-700 mb-1">Pros</div>
-                        <div className="text-gray-600 line-clamp-2">
-                            {pathway.pros?.slice(0, 2).join(', ')}
+                        <div className="text-gray-600">
+                            {pathway.pros?.join(', ')}
                         </div>
                     </div>
                     <div>
                         <div className="font-medium text-red-700 mb-1">Cons</div>
-                        <div className="text-gray-600 line-clamp-2">
-                            {pathway.cons?.slice(0, 2).join(', ')}
+                        <div className="text-gray-600">
+                            {pathway.cons?.join(', ')}
                         </div>
                     </div>
                 </div>
+
+                {/* Actions */}
+                <div className="mt-6 flex space-x-3">
+                    <button 
+                        onClick={() => setShowDetailsModal(true)}
+                        className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                    >
+                        View Details
+                    </button>
+                    <button className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
+                        Save Pathway
+                    </button>
+                </div>
             </div>
 
-            {/* Expanded Content */}
-            {isExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200">
-                    {/* Requirements */}
-                    <div className="mt-4">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Requirements</h4>
-                        <div className="space-y-2">
-                            {pathway.requirements?.map((req, index) => (
-                                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                                    <div>
-                                        <div className="text-sm font-medium text-gray-900">{req.subject}</div>
-                                        <div className="text-xs text-gray-600">{req.description}</div>
-                                    </div>
-                                    <div className="text-sm font-medium text-blue-600">
-                                        Min: {req.minimumGrade}
-                                    </div>
+            {/* Details Modal */}
+            {showDetailsModal && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+                            <h3 className="text-xl font-semibold text-gray-900">
+                                {pathway.name} - Detailed Information
+                            </h3>
+                            <button 
+                                onClick={() => setShowDetailsModal(false)} 
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="p-6">
+                            {/* Description */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold text-gray-900 mb-2">Description</h4>
+                                <p className="text-gray-700">{pathway.description}</p>
+                            </div>
+
+                            {/* Requirements */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Requirements</h4>
+                                <div className="space-y-3">
+                                    {pathway.requirements?.map((req, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <div className="text-sm font-medium text-gray-900">{req.subject}</div>
+                                                <div className="text-xs text-gray-600">{req.description}</div>
+                                            </div>
+                                            <div className="text-sm font-medium text-blue-600">
+                                                Min: {req.minimumGrade}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
+                            </div>
 
-                    {/* Detailed Pros and Cons */}
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h4 className="text-sm font-semibold text-green-700 mb-2">Advantages</h4>
-                            <ul className="space-y-1">
-                                {pathway.pros?.map((pro, index) => (
-                                    <li key={index} className="text-sm text-gray-600 flex items-start">
-                                        <svg className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        {pro}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="text-sm font-semibold text-red-700 mb-2">Considerations</h4>
-                            <ul className="space-y-1">
-                                {pathway.cons?.map((con, index) => (
-                                    <li key={index} className="text-sm text-gray-600 flex items-start">
-                                        <svg className="w-4 h-4 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        {con}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
+                            {/* Advantages and Considerations */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 className="text-lg font-semibold text-green-700 mb-3">Advantages</h4>
+                                    <ul className="space-y-2">
+                                        {pathway.pros?.map((pro, index) => (
+                                            <li key={index} className="text-sm text-gray-700 flex items-start">
+                                                <svg className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                {pro}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-semibold text-red-700 mb-3">Considerations</h4>
+                                    <ul className="space-y-2">
+                                        {pathway.cons?.map((con, index) => (
+                                            <li key={index} className="text-sm text-gray-700 flex items-start">
+                                                <svg className="w-4 h-4 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                {con}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
 
-                    {/* Actions */}
-                    <div className="mt-6 flex space-x-3">
-                        <button className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
-                            View Details
-                        </button>
-                        <button className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
-                            Save Pathway
-                        </button>
+                            {/* Modal Actions */}
+                            <div className="mt-6 flex justify-end space-x-3">
+                                <button 
+                                    onClick={() => setShowDetailsModal(false)}
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium"
+                                >
+                                    Close
+                                </button>
+                                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                                    Save Pathway
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
-
-            {/* Expand/Collapse Indicator */}
-            <div className="px-6 pb-4 flex justify-center">
-                <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                        isExpanded ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-            </div>
         </div>
     );
 }

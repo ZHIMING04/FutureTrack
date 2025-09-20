@@ -70,3 +70,5 @@ Route::put('/settings/profile', [SettingsController::class, 'updateProfile']);
 Route::put('/settings/preferences', [SettingsController::class, 'updatePreferences']);
 Route::put('/settings/password', [SettingsController::class, 'updatePassword']);
 Route::delete('/settings/delete-account', [SettingsController::class, 'deleteAccount']);
+
+
