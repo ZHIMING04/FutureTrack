@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 export default function PathwayCard({ pathway, isSelected, onSelect }) {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const getMatchColor = (percentage) => {
         if (percentage >= 70) return 'text-green-600 bg-green-100';
@@ -23,6 +25,18 @@ export default function PathwayCard({ pathway, isSelected, onSelect }) {
         if (range.includes('Medium')) return 'text-yellow-600 bg-yellow-100';
         if (range.includes('High')) return 'text-red-600 bg-red-100';
         return 'text-gray-600 bg-gray-100';
+    };
+
+    const handleSavePathway = () => {
+        if (!isSaved) {
+            setIsSaved(true);
+            setShowSuccessMessage(true);
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+            }, 3000);
+        }
     };
 
     return (
@@ -106,11 +120,38 @@ export default function PathwayCard({ pathway, isSelected, onSelect }) {
                     >
                         View Details
                     </button>
-                    <button className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
-                        Save Pathway
+                    <button 
+                        onClick={handleSavePathway}
+                        disabled={isSaved}
+                        className={`flex-1 py-2 px-4 rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center ${
+                            isSaved 
+                                ? 'bg-green-600 text-white cursor-not-allowed' 
+                                : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
+                    >
+                        {isSaved ? (
+                            <>
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                Saved
+                            </>
+                        ) : (
+                            'Save Pathway'
+                        )}
                     </button>
                 </div>
             </div>
+
+            {/* Success Message */}
+            {showSuccessMessage && (
+                <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center animate-pulse">
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-medium">Pathway saved successfully!</span>
+                </div>
+            )}
 
             {/* Details Modal */}
             {showDetailsModal && (
@@ -195,8 +236,25 @@ export default function PathwayCard({ pathway, isSelected, onSelect }) {
                                 >
                                     Close
                                 </button>
-                                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
-                                    Save Pathway
+                                <button 
+                                    onClick={handleSavePathway}
+                                    disabled={isSaved}
+                                    className={`px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium flex items-center ${
+                                        isSaved 
+                                            ? 'bg-green-600 text-white cursor-not-allowed' 
+                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    }`}
+                                >
+                                    {isSaved ? (
+                                        <>
+                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Saved
+                                        </>
+                                    ) : (
+                                        'Save Pathway'
+                                    )}
                                 </button>
                             </div>
                         </div>
