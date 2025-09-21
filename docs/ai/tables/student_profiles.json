@@ -1,0 +1,27 @@
+{
+  "table": "student_profiles",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "interests", "type": "json", "nullable": true, "default": null},
+    {"name": "skills", "type": "json", "nullable": true, "default": null},
+    {"name": "achievements", "type": "json", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "interests": ["Technology", "Data Analysis", "Problem Solving", "Programming"],
+      "skills": {"Programming": ["Python", "HTML/CSS", "JavaScript (basic)"], "Software": ["Microsoft Office Suite", "Canva", "Adobe Photoshop"], "Languages": ["Malay (native)", "English (fluent)", "Mandarin (conversational)"]},
+      "achievements": {"activities": ["Computer Club Secretary (2023-2024)", "National Science Competition Participant (2023)"], "awards": ["Best Student in Mathematics (2023)"]}
+    }
+  ],
+  "enumerations": {},
+  "ai_relevance": ["interests", "skills", "achievements"]
+}

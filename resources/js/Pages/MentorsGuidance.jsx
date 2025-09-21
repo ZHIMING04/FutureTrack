@@ -29,21 +29,21 @@ export default function MentorsGuidance({
         >
             <Head title="Mentors & Guidance" />
             
-            <div className="p-6">
+            <div className="p-0">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-4">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Mentors & Guidance</h1>
                     <p className="text-gray-600">Get personalized guidance from AI mentors and human experts</p>
                 </div>
 
                 {/* Tabs */}
-                <MentorTabs 
-                    activeTab={currentTab} 
+                <MentorTabs
+                    activeTab={currentTab}
                     onTabChange={handleTabChange}
                 />
 
                 {/* Tab Content */}
-                <div className="mt-6">
+                <div className="mt-2">
                     {currentTab === 'ai-mentor' && (
                         <AIChatInterface 
                             chatHistory={aiMentorChat}

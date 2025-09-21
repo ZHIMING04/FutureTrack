@@ -14,6 +14,7 @@ use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\MentorsGuidanceController;
 use App\Http\Controllers\ResourcesController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Api\MentorController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -70,5 +71,11 @@ Route::put('/settings/profile', [SettingsController::class, 'updateProfile']);
 Route::put('/settings/preferences', [SettingsController::class, 'updatePreferences']);
 Route::put('/settings/password', [SettingsController::class, 'updatePassword']);
 Route::delete('/settings/delete-account', [SettingsController::class, 'deleteAccount']);
+
+// AI Mentor Routes (Public Prototype - No Auth, Throttled)
+Route::middleware(['throttle:ai'])->group(function () {
+    Route::post('/ai/mentor', [\App\Http\Controllers\Api\MentorController::class, 'answer'])->name('ai.mentor.answer');
+    Route::post('/ai/mentor/free_text', [\App\Http\Controllers\Api\MentorController::class, 'fallback'])->name('ai.mentor.fallback');
+});
 
 

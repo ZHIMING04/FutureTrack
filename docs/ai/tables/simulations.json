@@ -1,0 +1,25 @@
+{
+  "table": "simulations",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "name", "type": "string", "nullable": false, "default": null},
+    {"name": "pathway_data", "type": "json", "nullable": false, "default": null},
+    {"name": "grade_adjustments", "type": "json", "nullable": false, "default": null},
+    {"name": "admission_likelihood", "type": "integer", "nullable": false, "default": null},
+    {"name": "timeline", "type": "string", "nullable": false, "default": null},
+    {"name": "estimated_cost", "type": "string", "nullable": false, "default": null},
+    {"name": "risk_assessment", "type": "json", "nullable": true, "default": null},
+    {"name": "improvement_suggestions", "type": "json", "nullable": true, "default": null},
+    {"name": "is_saved", "type": "boolean", "nullable": false, "default": false},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [],
+  "enumerations": {},
+  "ai_relevance": ["name", "pathway_data", "grade_adjustments", "admission_likelihood", "risk_assessment", "improvement_suggestions"]
+}

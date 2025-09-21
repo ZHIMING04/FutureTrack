@@ -21,27 +21,8 @@ class MentorsGuidanceController extends Controller
 
         $tab = $request->get('tab', 'ai-mentor');
 
-        // Mock AI mentor chat data
-        $aiMentorChat = [
-            [
-                'id' => 1,
-                'sender' => 'ai-mentor',
-                'message' => 'Hi! I can help explain the differences between STPM, Matriculation, and Foundation programs. What would you like to know?',
-                'timestamp' => '10:30 AM'
-            ],
-            [
-                'id' => 2,
-                'sender' => 'user',
-                'message' => 'What\'s the difference between STPM and Matriculation for getting into computer science?',
-                'timestamp' => '10:32 AM'
-            ],
-            [
-                'id' => 3,
-                'sender' => 'ai-mentor',
-                'message' => 'Great question! Here are the key differences: **STPM:** • Duration: 2 years • More subject choices • Internationally recognized • **Matriculation:** • Duration: 1 year • Government sponsored • More competitive admission',
-                'timestamp' => '10:33 AM'
-            ]
-        ];
+        // Initialize with empty chat for AI mentor
+        $aiMentorChat = [];
 
         // Mock human mentors data
         $humanMentors = [
@@ -108,12 +89,13 @@ class MentorsGuidanceController extends Controller
             ]
         ];
 
-        // Quick questions
-        $quickQuestions = [
-            'What are the requirements for Computer Science?',
-            'Compare STPM vs Foundation programs',
-            'How to improve my pathway eligibility?'
-        ];
+        // Load quick questions from config
+        $quickQuestionsSpecs = json_decode(file_get_contents(config('ai.quick_questions_path')), true) ?? [];
+        $quickQuestions = array_map(fn($spec) => [
+            'intent_id' => $spec['intent_id'],
+            'label' => $spec['label'],
+            'params' => $spec['params'] ?? []
+        ], array_values($quickQuestionsSpecs));
 
         // Add navigation items
         $mentorData = [
@@ -146,41 +128,4 @@ class MentorsGuidanceController extends Controller
         return Inertia::render('MentorsGuidance', $mentorData);
     }
 
-    public function sendMessage(Request $request)
-    {
-        $user = User::first();
-        
-        if (!$user) {
-            return back()->with('error', 'User not found');
-        }
-
-        $request->validate([
-            'message' => 'required|string|max:1000'
-        ]);
-
-        // Mock AI response (in real implementation, this would call AI service)
-        $aiResponse = $this->generateAIResponse($request->message);
-
-        return back()->with('success', 'Message sent successfully');
-    }
-
-    private function generateAIResponse($message)
-    {
-        // Simple mock responses based on keywords
-        $message = strtolower($message);
-        
-        if (strpos($message, 'stpm') !== false && strpos($message, 'matriculation') !== false) {
-            return 'STPM and Matriculation are both pre-university programs. STPM takes 2 years and is internationally recognized, while Matriculation takes 1 year and is government-sponsored. Both can lead to university admission.';
-        }
-        
-        if (strpos($message, 'computer science') !== false) {
-            return 'For Computer Science, you typically need strong Mathematics and Science subjects. STPM requires Mathematics and Physics with good grades, while Matriculation has similar requirements but is more competitive.';
-        }
-        
-        if (strpos($message, 'requirements') !== false) {
-            return 'General requirements include SPM with credits in Mathematics, English, and Science subjects. Specific requirements vary by university and program.';
-        }
-        
-        return 'I understand you\'re asking about ' . $message . '. Could you be more specific about what you\'d like to know? I can help with pathway planning, university requirements, and career guidance.';
-    }
 }

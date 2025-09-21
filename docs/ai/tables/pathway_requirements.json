@@ -1,0 +1,25 @@
+{
+  "table": "pathway_requirements",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "pathway_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "requirement_type", "type": "enum", "nullable": false, "default": null},
+    {"name": "subject_name", "type": "string", "nullable": false, "default": null},
+    {"name": "minimum_grade", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "pathway_id", "refTable": "pathways", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {"pathway_id": 1, "requirement_type": "SPM", "subject_name": "Mathematics", "minimum_grade": "Credit"},
+    {"pathway_id": 2, "requirement_type": "SPM", "subject_name": "Mathematics", "minimum_grade": "A-"}
+  ],
+  "enumerations": {
+    "requirement_type": ["SPM", "STPM", "Matriculation", "Foundation", "Other"]
+  },
+  "ai_relevance": ["requirement_type", "subject_name", "minimum_grade"]
+}

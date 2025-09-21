@@ -1,0 +1,31 @@
+{
+  "table": "resources",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "title", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "type", "type": "enum", "nullable": false, "default": "Article"},
+    {"name": "category", "type": "string", "nullable": true, "default": null},
+    {"name": "content", "type": "text", "nullable": true, "default": null},
+    {"name": "file_url", "type": "string", "nullable": true, "default": null},
+    {"name": "video_url", "type": "string", "nullable": true, "default": null},
+    {"name": "read_time_minutes", "type": "integer", "nullable": true, "default": null},
+    {"name": "views_count", "type": "integer", "nullable": false, "default": 0},
+    {"name": "rating", "type": "decimal", "nullable": false, "default": 0},
+    {"name": "tags", "type": "json", "nullable": true, "default": null},
+    {"name": "is_featured", "type": "boolean", "nullable": false, "default": false},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"title": "Complete Guide to UPU Application", "type": "Guide", "category": "Applications", "tags": ["UPU", "University"]},
+    {"title": "STPM vs Matriculation: Which is Right for You?", "type": "Guide", "category": "Pathways", "tags": ["STPM", "Matriculation"]}
+  ],
+  "enumerations": {
+    "type": ["Guide", "Article", "Video", "Template"]
+  },
+  "ai_relevance": ["title", "description", "type", "category", "content", "tags"]
+}

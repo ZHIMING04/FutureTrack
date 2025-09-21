@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\InterestAssessment;
+use App\Services\Ai\BedrockChatClient;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -213,6 +214,16 @@ class InterestAssessmentController extends Controller
             'success' => 'Answer saved successfully'
         ];
 
+        // If assessment is complete, compute scores and AI insight
+        if ($progress === 100) {
+            $scores = $this->computeScores($userAnswers, $questions);
+            $assessmentData['results'] = $scores;
+
+            // Generate AI insight
+            $aiSummary = $this->generateAiInsight($scores, $userAnswers, $questions);
+            $assessmentData['aiSummary'] = $aiSummary;
+        }
+
         // Add navigation items
         $assessmentData['navigationItems'] = [
             ['id' => 1, 'name' => 'Dashboard', 'href' => '/dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
@@ -230,5 +241,109 @@ class InterestAssessmentController extends Controller
         ];
 
         return Inertia::render('InterestAssessment', $assessmentData);
+    }
+
+    private function computeScores(array $userAnswers, array $questions): array
+    {
+        // Map answers to scores
+        $scoreMap = [
+            'Strongly Disagree' => -2,
+            'Disagree' => -1,
+            'Neutral' => 0,
+            'Agree' => 1,
+            'Strongly Agree' => 2,
+        ];
+
+        $categoryScores = [];
+        $categoryCounts = [];
+
+        foreach ($questions as $question) {
+            $qNum = $question['question_number'];
+            $category = $question['category'];
+            $answer = $userAnswers[$qNum] ?? null;
+
+            if ($answer && isset($scoreMap[$answer])) {
+                if (!isset($categoryScores[$category])) {
+                    $categoryScores[$category] = 0;
+                    $categoryCounts[$category] = 0;
+                }
+                $categoryScores[$category] += $scoreMap[$answer];
+                $categoryCounts[$category]++;
+            }
+        }
+
+        $results = [];
+        foreach ($categoryScores as $category => $score) {
+            $count = $categoryCounts[$category];
+            $maxPossible = $count * 2; // max score per question
+            $minPossible = $count * -2; // min score per question
+            $range = $maxPossible - $minPossible;
+            $adjustedScore = $score - $minPossible; // shift to 0-based
+            $percentage = $range > 0 ? round(($adjustedScore / $range) * 100) : 0;
+
+            // Determine band
+            if ($percentage >= 80) $band = 'Very High';
+            elseif ($percentage >= 60) $band = 'High';
+            elseif ($percentage >= 40) $band = 'Medium';
+            elseif ($percentage >= 20) $band = 'Low';
+            else $band = 'Very Low';
+
+            $results[] = [
+                'category' => $category,
+                'score' => $score,
+                'percentage' => $percentage,
+                'band' => $band,
+            ];
+        }
+
+        return $results;
+    }
+
+    private function generateAiInsight(array $scores, array $userAnswers, array $questions): ?array
+    {
+        try {
+            // Build LLM input
+            $sections = array_map(function ($score) {
+                return [
+                    'name' => $score['category'],
+                    'score_pct' => $score['percentage'],
+                    'band' => $score['band'],
+                ];
+            }, $scores);
+
+            // Simple heuristic for top factors (highest and lowest scores)
+            $sortedScores = collect($scores)->sortByDesc('percentage');
+            $topPositive = $sortedScores->take(2)->pluck('category')->toArray();
+            $topGaps = $sortedScores->sortBy('percentage')->take(2)->pluck('category')->toArray();
+
+            $aiInput = [
+                'user_id' => 'temp-or-null',
+                'sections' => $sections,
+                'top_positive_factors' => array_map(fn($cat) => "Interest in {$cat}", $topPositive),
+                'top_gaps' => array_map(fn($cat) => "Lower interest in {$cat}", $topGaps),
+            ];
+
+            $systemPrompt = "You are the FutureTrack AI Mentor. \nGiven the student's section scores and key factors, produce a SHORT, supportive summary.\n\nRules:\n- Output STRICT JSON only, matching the provided schema exactly (no markdown, no commentary).\n- Keep \"summary\" to 2–3 sentences, friendly and encouraging.\n- \"bullets\": 2–4 concise, practical insights.\n- \"next_steps\": 2–3 items with simple route-style actions (e.g., open:/career-explorer).\n- No claims beyond the provided scores.\n- If information is insufficient, return {\"headline\":\"Assessment incomplete\",\"summary\":\"…\",\"bullets\":[],\"next_steps\":[],\"tone\":\"supportive\"}.";
+
+            $messages = [
+                ['role' => 'user', 'content' => [[
+                    'text' => $systemPrompt . "\n\nINPUT:\n" . json_encode($aiInput)
+                ]]],
+            ];
+
+            $bedrock = app(BedrockChatClient::class);
+            $rawResponse = $bedrock->send($messages);
+
+            $parsed = json_decode($rawResponse, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($parsed)) {
+                return $parsed;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            // Log error but don't fail the assessment
+            logger()->error('AI insight generation failed', ['error' => $e->getMessage()]);
+            return null;
+        }
     }
 }

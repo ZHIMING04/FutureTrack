@@ -1,0 +1,28 @@
+{
+  "table": "academic_subjects",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "subject_code", "type": "string", "nullable": true, "default": null},
+    {"name": "subject_name", "type": "string", "nullable": false, "default": null},
+    {"name": "grade", "type": "string", "nullable": false, "default": null},
+    {"name": "grade_points", "type": "decimal", "nullable": true, "default": null},
+    {"name": "exam_type", "type": "enum", "nullable": false, "default": "SPM"},
+    {"name": "year", "type": "integer", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {"user_id": 1, "subject_name": "Bahasa Melayu", "grade": "A", "exam_type": "SPM", "year": 2024},
+    {"user_id": 1, "subject_name": "Mathematics", "grade": "A", "exam_type": "SPM", "year": 2024},
+    {"user_id": 1, "subject_name": "Additional Mathematics", "grade": "B+", "exam_type": "SPM", "year": 2024}
+  ],
+  "enumerations": {
+    "exam_type": ["SPM", "STPM", "MUET", "Other"]
+  },
+  "ai_relevance": ["subject_name", "grade", "exam_type", "year"]
+}

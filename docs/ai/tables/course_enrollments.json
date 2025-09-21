@@ -1,0 +1,24 @@
+{
+  "table": "course_enrollments",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "course_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "status", "type": "enum", "nullable": false, "default": "Enrolled"},
+    {"name": "progress_percentage", "type": "integer", "nullable": false, "default": 0},
+    {"name": "enrolled_at", "type": "timestamp", "nullable": false, "default": null},
+    {"name": "completed_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"},
+    {"column": "course_id", "refTable": "courses", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [],
+  "enumerations": {
+    "status": ["Enrolled", "In Progress", "Completed", "Dropped"]
+  },
+  "ai_relevance": ["status", "progress_percentage"]
+}

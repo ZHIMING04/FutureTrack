@@ -5,19 +5,22 @@ import AssessmentProgress from '../Component/Assessment/AssessmentProgress';
 import QuestionCard from '../Component/Assessment/QuestionCard';
 import AssessmentResults from '../Component/Assessment/AssessmentResults';
 
-export default function InterestAssessment({ 
-    user, 
-    currentQuestion, 
-    totalQuestions, 
-    progress, 
-    questions, 
-    overallProgress, 
-    navigationItems, 
-    success 
+export default function InterestAssessment({
+    user,
+    currentQuestion,
+    totalQuestions,
+    progress,
+    questions,
+    overallProgress,
+    navigationItems,
+    success,
+    results,
+    aiSummary
 }) {
+    console.log(results)
     const [currentStep, setCurrentStep] = useState(currentQuestion || 1);
     const [answers, setAnswers] = useState({});
-    const [showResults, setShowResults] = useState(false);
+    const [showResults, setShowResults] = useState(!!results);
 
     const handleAnswerSelect = (questionNumber, answer) => {
         setAnswers(prev => ({
@@ -86,9 +89,11 @@ export default function InterestAssessment({
                         answers={answers}
                     />
                 ) : (
-                    <AssessmentResults 
+                    <AssessmentResults
                         answers={answers}
                         questions={questions}
+                        results={results}
+                        aiSummary={aiSummary}
                         onRestart={() => {
                             setCurrentStep(1);
                             setAnswers({});

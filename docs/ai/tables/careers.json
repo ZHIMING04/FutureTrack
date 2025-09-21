@@ -1,0 +1,30 @@
+{
+  "table": "careers",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "title", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "domain", "type": "string", "nullable": true, "default": null},
+    {"name": "demand_level", "type": "enum", "nullable": false, "default": "Medium"},
+    {"name": "demand_index", "type": "integer", "nullable": false, "default": 50},
+    {"name": "salary_range_min", "type": "string", "nullable": true, "default": null},
+    {"name": "salary_range_max", "type": "string", "nullable": true, "default": null},
+    {"name": "study_duration", "type": "string", "nullable": true, "default": null},
+    {"name": "key_skills", "type": "json", "nullable": true, "default": null},
+    {"name": "degree_programs", "type": "json", "nullable": true, "default": null},
+    {"name": "requirements", "type": "text", "nullable": true, "default": null},
+    {"name": "is_ai_recommended", "type": "boolean", "nullable": false, "default": false},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"title": "Data Engineer", "domain": "Technology", "demand_level": "High", "salary_range_min": "5000", "salary_range_max": "12000", "key_skills": ["Python", "SQL", "Big Data"]},
+    {"title": "Software Developer", "domain": "Technology", "demand_level": "Very High", "salary_range_min": "4000", "salary_range_max": "10000", "key_skills": ["Programming", "Software Design"]}
+  ],
+  "enumerations": {
+    "demand_level": ["Low", "Medium", "High", "Very High"]
+  },
+  "ai_relevance": ["title", "description", "domain", "demand_level", "key_skills", "degree_programs"]
+}

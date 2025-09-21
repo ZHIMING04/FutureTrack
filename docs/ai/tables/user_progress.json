@@ -1,0 +1,28 @@
+{
+  "table": "user_progress",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "roadmap_phase_id", "type": "bigint", "nullable": true, "default": null},
+    {"name": "task_name", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": true, "default": null},
+    {"name": "status", "type": "enum", "nullable": false, "default": "Not Started"},
+    {"name": "due_date", "type": "date", "nullable": true, "default": null},
+    {"name": "completed_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"},
+    {"column": "roadmap_phase_id", "refTable": "roadmap_phases", "refColumn": "id", "onDelete": "set null"}
+  ],
+  "sample_rows": [
+    {"user_id": 1, "roadmap_phase_id": 1, "task_name": "Complete SPM examinations", "status": "Completed"},
+    {"user_id": 1, "roadmap_phase_id": 1, "task_name": "Research university options", "status": "In Progress"}
+  ],
+  "enumerations": {
+    "status": ["Not Started", "In Progress", "Completed", "Skipped"]
+  },
+  "ai_relevance": ["task_name", "status"]
+}

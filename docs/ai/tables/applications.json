@@ -1,0 +1,22 @@
+{
+  "table": "applications",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "name", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "organization", "type": "string", "nullable": false, "default": null},
+    {"name": "requirements", "type": "json", "nullable": true, "default": null},
+    {"name": "website_url", "type": "string", "nullable": true, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"name": "UPU Main Application", "organization": "UPU", "requirements": ["SPM results", "MUET (optional)"]},
+    {"name": "Matriculation Program Application", "organization": "Ministry of Education", "requirements": ["SPM results", "Health certificate"]}
+  ],
+  "enumerations": {},
+  "ai_relevance": ["name", "description", "organization", "requirements"]
+}

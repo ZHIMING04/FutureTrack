@@ -1,0 +1,27 @@
+{
+  "table": "pathways",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "name", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "total_duration", "type": "string", "nullable": false, "default": null},
+    {"name": "cost_range_min", "type": "string", "nullable": true, "default": null},
+    {"name": "cost_range_max", "type": "string", "nullable": true, "default": null},
+    {"name": "competitiveness", "type": "enum", "nullable": false, "default": "Medium"},
+    {"name": "pros", "type": "json", "nullable": true, "default": null},
+    {"name": "cons", "type": "json", "nullable": true, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"name": "STPM → Degree", "total_duration": "2 + 3-4 years", "cost_range_min": "15000", "cost_range_max": "25000", "competitiveness": "High"},
+    {"name": "Matriculation → Degree", "total_duration": "1 + 3-4 years", "cost_range_min": "8000", "cost_range_max": "18000", "competitiveness": "Very High"}
+  ],
+  "enumerations": {
+    "competitiveness": ["Low", "Medium", "High", "Very High"]
+  },
+  "ai_relevance": ["name", "description", "total_duration", "cost_range_min", "cost_range_max", "competitiveness", "pros", "cons"]
+}

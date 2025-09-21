@@ -1,0 +1,23 @@
+{
+  "table": "roadmap_phases",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "name", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "order", "type": "integer", "nullable": false, "default": null},
+    {"name": "tasks", "type": "json", "nullable": true, "default": null},
+    {"name": "start_date", "type": "date", "nullable": true, "default": null},
+    {"name": "end_date", "type": "date", "nullable": true, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"name": "Pre-University Preparation", "order": 1, "tasks": ["Complete SPM examinations", "Receive SPM results"]},
+    {"name": "Application Phase", "order": 2, "tasks": ["Submit UPU application", "Apply for Matriculation"]}
+  ],
+  "enumerations": {},
+  "ai_relevance": ["name", "description", "tasks"]
+}
