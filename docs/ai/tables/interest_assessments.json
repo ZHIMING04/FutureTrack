@@ -1,0 +1,27 @@
+{
+  "table": "interest_assessments",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "question_number", "type": "integer", "nullable": false, "default": null},
+    {"name": "question", "type": "text", "nullable": false, "default": null},
+    {"name": "category", "type": "enum", "nullable": false, "default": "Activities"},
+    {"name": "answer", "type": "enum", "nullable": true, "default": null},
+    {"name": "answered_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {"user_id": 1, "question_number": 1, "question": "I enjoy working with computers and technology", "category": "Activities", "answer": "Strongly Agree"},
+    {"user_id": 1, "question_number": 2, "question": "I like solving complex problems", "category": "Activities", "answer": "Agree"}
+  ],
+  "enumerations": {
+    "category": ["Activities", "Interests", "Skills", "Values"],
+    "answer": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+  },
+  "ai_relevance": ["question", "category", "answer"]
+}

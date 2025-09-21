@@ -1,8 +1,9 @@
 import { router } from '@inertiajs/react';
+import AIInsightCard from './AIInsightCard';
 
-export default function AssessmentResults({ answers, questions, onRestart }) {
-    // Calculate results based on answers
-    const calculateResults = () => {
+export default function AssessmentResults({ answers, questions, results: serverResults, onRestart, aiSummary }) {
+    // Use server-computed results if available, otherwise fall back to client calculation
+    const results = serverResults || (() => {
         const categories = {
             'Activities': { strongly_agree: 0, agree: 0, neutral: 0, disagree: 0, strongly_disagree: 0 },
             'Interests': { strongly_agree: 0, agree: 0, neutral: 0, disagree: 0, strongly_disagree: 0 },
@@ -32,23 +33,48 @@ export default function AssessmentResults({ answers, questions, onRestart }) {
         });
 
         return scores;
+    })();
+
+    const getScoreColor = (result) => {
+        // Handle both server format (with band) and client format (numeric score)
+        if (result.band) {
+            switch (result.band) {
+                case 'Very High': return 'text-green-600 bg-green-100';
+                case 'High': return 'text-green-500 bg-green-100';
+                case 'Medium': return 'text-blue-600 bg-blue-100';
+                case 'Low': return 'text-yellow-600 bg-yellow-100';
+                case 'Very Low': return 'text-red-600 bg-red-100';
+                default: return 'text-gray-600 bg-gray-100';
+            }
+        } else {
+            // Legacy client calculation
+            const score = result.percentage || result;
+            if (score >= 70) return 'text-green-600 bg-green-100';
+            if (score >= 40) return 'text-blue-600 bg-blue-100';
+            if (score >= 10) return 'text-yellow-600 bg-yellow-100';
+            return 'text-red-600 bg-red-100';
+        }
     };
 
-    const results = calculateResults();
-
-    const getScoreColor = (score) => {
-        if (score >= 70) return 'text-green-600 bg-green-100';
-        if (score >= 40) return 'text-blue-600 bg-blue-100';
-        if (score >= 10) return 'text-yellow-600 bg-yellow-100';
-        return 'text-red-600 bg-red-100';
+    const getScoreLabel = (result) => {
+        // Handle both server format (with band) and client format (numeric score)
+        if (result.band) {
+            return `${result.percentage}% - ${result.band} Interest`;
+        } else {
+            // Legacy client calculation
+            const score = result.percentage || result;
+            if (score >= 70) return `${score}% - High Interest`;
+            if (score >= 40) return `${score}% - Moderate Interest`;
+            if (score >= 10) return `${score}% - Low Interest`;
+            return `${score}% - Very Low Interest`;
+        }
     };
 
-    const getScoreLabel = (score) => {
-        if (score >= 70) return 'High Interest';
-        if (score >= 40) return 'Moderate Interest';
-        if (score >= 10) return 'Low Interest';
-        return 'Very Low Interest';
+    const getScoreValue = (result) => {
+        return result.percentage || result;
     };
+
+    console.log(results)
 
     return (
         <div className="bg-white rounded-lg shadow-md p-8">
@@ -67,17 +93,34 @@ export default function AssessmentResults({ answers, questions, onRestart }) {
 
             {/* Results Summary */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {Object.entries(results).map(([category, score]) => (
+                {results.map ? results.map((result, index) => (
+                    <div key={result.category || index} className="text-center p-6 bg-gray-50 rounded-lg">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{result.category}</h3>
+                        <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-3 ${getScoreColor(result)}`}>
+                            {getScoreLabel(result)}
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                                className={`h-2 rounded-full transition-all duration-500 ${
+                                    getScoreValue(result) >= 70 ? 'bg-green-500' :
+                                    getScoreValue(result) >= 40 ? 'bg-blue-500' :
+                                    getScoreValue(result) >= 10 ? 'bg-yellow-500' : 'bg-red-500'
+                                }`}
+                                style={{ width: `${Math.max(getScoreValue(result), 5)}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                )) : Object.entries(results).map(([category, score]) => (
                     <div key={category} className="text-center p-6 bg-gray-50 rounded-lg">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">{category}</h3>
                         <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-3 ${getScoreColor(score)}`}>
-                            {score}% - {getScoreLabel(score)}
+                            {getScoreLabel(score)}
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
+                            <div
                                 className={`h-2 rounded-full transition-all duration-500 ${
-                                    score >= 70 ? 'bg-green-500' : 
-                                    score >= 40 ? 'bg-blue-500' : 
+                                    score >= 70 ? 'bg-green-500' :
+                                    score >= 40 ? 'bg-blue-500' :
                                     score >= 10 ? 'bg-yellow-500' : 'bg-red-500'
                                 }`}
                                 style={{ width: `${Math.max(score, 5)}%` }}
@@ -86,6 +129,9 @@ export default function AssessmentResults({ answers, questions, onRestart }) {
                     </div>
                 ))}
             </div>
+
+            {/* AI Insight */}
+            <AIInsightCard summary={aiSummary} />
 
             {/* Recommendations */}
             <div className="bg-blue-50 rounded-lg p-6 mb-8">

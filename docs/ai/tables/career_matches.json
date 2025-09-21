@@ -1,0 +1,25 @@
+{
+  "table": "career_matches",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "career_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "match_percentage", "type": "integer", "nullable": false, "default": null},
+    {"name": "matching_factors", "type": "json", "nullable": true, "default": null},
+    {"name": "is_primary_goal", "type": "boolean", "nullable": false, "default": false},
+    {"name": "calculated_at", "type": "timestamp", "nullable": false, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"},
+    {"column": "career_id", "refTable": "careers", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {"user_id": 1, "career_id": 1, "match_percentage": 95, "matching_factors": ["High interest in data", "Strong math skills"], "is_primary_goal": true},
+    {"user_id": 1, "career_id": 2, "match_percentage": 88, "matching_factors": ["Programming interest", "Logical thinking"], "is_primary_goal": false}
+  ],
+  "enumerations": {},
+  "ai_relevance": ["match_percentage", "matching_factors", "is_primary_goal"]
+}

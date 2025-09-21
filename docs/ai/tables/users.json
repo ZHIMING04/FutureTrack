@@ -1,0 +1,40 @@
+{
+  "table": "users",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "name", "type": "string", "nullable": false, "default": null},
+    {"name": "email", "type": "string", "nullable": false, "default": null},
+    {"name": "email_verified_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "password", "type": "string", "nullable": false, "default": null},
+    {"name": "role", "type": "enum", "nullable": false, "default": "student"},
+    {"name": "phone", "type": "string", "nullable": true, "default": null},
+    {"name": "ic_number", "type": "string", "nullable": true, "default": null},
+    {"name": "current_education_level", "type": "enum", "nullable": true, "default": null},
+    {"name": "school", "type": "string", "nullable": true, "default": null},
+    {"name": "profile_picture", "type": "string", "nullable": true, "default": null},
+    {"name": "preferences", "type": "json", "nullable": true, "default": null},
+    {"name": "remember_token", "type": "string", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {
+      "id": 1,
+      "name": "Sarah Ahmad",
+      "email": "sarah.ahmad@email.com",
+      "role": "student",
+      "phone": "+60123456789",
+      "ic_number": "050815-12-5678",
+      "current_education_level": "SPM Student",
+      "school": "SMK Taman Desa",
+      "preferences": {"notifications": true, "theme": "light", "language": "en"}
+    }
+  ],
+  "enumerations": {
+    "role": ["student", "mentor", "admin"],
+    "current_education_level": ["SPM Student", "STPM Student", "Matriculation Student", "Foundation Student", "Degree Student"]
+  },
+  "ai_relevance": ["name", "email", "role", "current_education_level", "school"]
+}

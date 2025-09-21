@@ -1,0 +1,27 @@
+{
+  "table": "deadlines",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "application_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "title", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": true, "default": null},
+    {"name": "due_date", "type": "date", "nullable": false, "default": null},
+    {"name": "urgency_level", "type": "enum", "nullable": false, "default": "Medium"},
+    {"name": "days_remaining", "type": "integer", "nullable": true, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "application_id", "refTable": "applications", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [
+    {"application_id": 1, "title": "UPU Main Application", "urgency_level": "Critical"},
+    {"application_id": 2, "title": "Matriculation Program Application", "urgency_level": "High"}
+  ],
+  "enumerations": {
+    "urgency_level": ["Low", "Medium", "High", "Critical"]
+  },
+  "ai_relevance": ["title", "due_date", "urgency_level"]
+}

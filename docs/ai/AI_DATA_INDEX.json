@@ -1,0 +1,53 @@
+{
+  "app": "FutureTrack",
+  "version": "1.0",
+  "tables": [
+    {"name": "users", "model": "User", "row_estimate": 1, "key_fields": ["id", "name", "email", "role"], "important_for_ai": true, "notes": "Main user table with roles."},
+    {"name": "student_profiles", "model": "StudentProfile", "row_estimate": 1, "key_fields": ["user_id", "interests", "skills"], "important_for_ai": true, "notes": "Contains student-specific details."},
+    {"name": "academic_subjects", "model": "AcademicSubject", "row_estimate": 10, "key_fields": ["user_id", "subject_name", "grade"], "important_for_ai": true, "notes": "Student's academic performance."},
+    {"name": "interest_assessments", "model": "InterestAssessment", "row_estimate": 5, "key_fields": ["user_id", "question", "answer"], "important_for_ai": true, "notes": "Stores user's answers to interest assessment questions."},
+    {"name": "careers", "model": "Career", "row_estimate": 4, "key_fields": ["title", "domain", "demand_level"], "important_for_ai": true, "notes": "List of possible careers."},
+    {"name": "career_matches", "model": "CareerMatch", "row_estimate": 3, "key_fields": ["user_id", "career_id", "match_percentage"], "important_for_ai": true, "notes": "Connects users to careers based on assessments."},
+    {"name": "pathways", "model": "Pathway", "row_estimate": 3, "key_fields": ["name", "competitiveness"], "important_for_ai": true, "notes": "Educational pathways to a degree."},
+    {"name": "pathway_requirements", "model": "PathwayRequirement", "row_estimate": 10, "key_fields": ["pathway_id", "subject_name", "minimum_grade"], "important_for_ai": true, "notes": "Requirements for each pathway."},
+    {"name": "applications", "model": "Application", "row_estimate": 3, "key_fields": ["name", "organization"], "important_for_ai": true, "notes": "University or scholarship applications."},
+    {"name": "deadlines", "model": "Deadline", "row_estimate": 5, "key_fields": ["application_id", "title", "due_date"], "important_for_ai": true, "notes": "Deadlines for applications."},
+    {"name": "user_applications", "model": "UserApplication", "row_estimate": 0, "key_fields": ["user_id", "application_id", "status"], "important_for_ai": true, "notes": "Tracks a user's application status."},
+    {"name": "courses", "model": "Course", "row_estimate": 5, "key_fields": ["title", "type", "skills_covered"], "important_for_ai": true, "notes": "Online courses available to students."},
+    {"name": "course_enrollments", "model": "CourseEnrollment", "row_estimate": 0, "key_fields": ["user_id", "course_id", "status"], "important_for_ai": true, "notes": "Tracks a user's enrollment in a course."},
+    {"name": "resources", "model": "Resource", "row_estimate": 5, "key_fields": ["title", "type", "category"], "important_for_ai": true, "notes": "Helpful articles, guides, and videos."},
+    {"name": "roadmap_phases", "model": "RoadmapPhase", "row_estimate": 4, "key_fields": ["name", "order", "tasks"], "important_for_ai": true, "notes": "Phases of a student's educational roadmap."},
+    {"name": "user_progress", "model": "UserProgress", "row_estimate": 4, "key_fields": ["user_id", "task_name", "status"], "important_for_ai": true, "notes": "Tracks a user's progress on their roadmap."},
+    {"name": "simulations", "model": "Simulation", "row_estimate": 0, "key_fields": ["user_id", "name", "admission_likelihood"], "important_for_ai": true, "notes": "Stores results of what-if scenarios."},
+    {"name": "university_courses", "model": "UniversityCourse", "row_estimate": 12, "key_fields": ["university_name", "course_name", "level", "career_paths"], "important_for_ai": true, "notes": "List of courses at various universities."}
+  ],
+  "enums": {
+    "user_roles": ["student", "mentor", "admin"],
+    "education_level": ["SPM Student", "STPM Student", "Matriculation Student", "Foundation Student", "Degree Student"],
+    "exam_type": ["SPM", "STPM", "MUET", "Other"],
+    "assessment_category": ["Activities", "Interests", "Skills", "Values"],
+    "assessment_answer": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
+    "demand_level": ["Low", "Medium", "High", "Very High"],
+    "pathway_competitiveness": ["Low", "Medium", "High", "Very High"],
+    "requirement_type": ["SPM", "STPM", "Matriculation", "Foundation", "Other"],
+    "application_status": ["Not Started", "In Progress", "Submitted", "Under Review", "Accepted", "Rejected"],
+    "urgency_level": ["Low", "Medium", "High", "Critical"],
+    "course_type": ["Individual Course", "Bundle"],
+    "enrollment_status": ["Enrolled", "In Progress", "Completed", "Dropped"],
+    "resource_type": ["Guide", "Article", "Video", "Template"],
+    "progress_status": ["Not Started", "In Progress", "Completed", "Skipped"],
+    "university_course_level": ["Foundation", "Diploma", "Bachelor", "Master", "PhD"]
+  },
+  "relationships": [
+    {"from": "student_profiles.user_id", "to": "users.id", "type": "belongsTo"},
+    {"from": "academic_subjects.user_id", "to": "users.id", "type": "belongsTo"},
+    {"from": "career_matches.user_id", "to": "users.id", "type": "belongsTo"},
+    {"from": "career_matches.career_id", "to": "careers.id", "type": "belongsTo"}
+  ],
+  "quick_facts": [
+    "The data model is centered around the 'users' table, with most other tables linking back to it.",
+    "Student profiles are richly detailed, including interests, skills, achievements, and academic history, which is ideal for AI-powered recommendations.",
+    "The `career_matches` table connects a user's profile and assessment results to potential careers, storing a `match_percentage`."
+  ],
+  "generatedAt": "AUTO"
+}

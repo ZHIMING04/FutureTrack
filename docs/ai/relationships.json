@@ -1,0 +1,32 @@
+{
+  "edges": [
+    { "from": "users", "to": "student_profiles", "type": "hasOne" },
+    { "from": "users", "to": "academic_subjects", "type": "hasMany" },
+    { "from": "users", "to": "interest_assessments", "type": "hasMany" },
+    { "from": "users", "to": "career_matches", "type": "hasMany" },
+    { "from": "users", "to": "user_applications", "type": "hasMany" },
+    { "from": "users", "to": "course_enrollments", "type": "hasMany" },
+    { "from": "users", "to": "user_progress", "type": "hasMany" },
+    { "from": "users", "to": "simulations", "type": "hasMany" },
+    { "from": "student_profiles", "to": "users", "type": "belongsTo" },
+    { "from": "academic_subjects", "to": "users", "type": "belongsTo" },
+    { "from": "interest_assessments", "to": "users", "type": "belongsTo" },
+    { "from": "career_matches", "to": "users", "type": "belongsTo" },
+    { "from": "career_matches", "to": "careers", "type": "belongsTo" },
+    { "from": "careers", "to": "career_matches", "type": "hasMany" },
+    { "from": "pathways", "to": "pathway_requirements", "type": "hasMany" },
+    { "from": "pathway_requirements", "to": "pathways", "type": "belongsTo" },
+    { "from": "applications", "to": "deadlines", "type": "hasMany" },
+    { "from": "applications", "to": "user_applications", "type": "hasMany" },
+    { "from": "deadlines", "to": "applications", "type": "belongsTo" },
+    { "from": "user_applications", "to": "users", "type": "belongsTo" },
+    { "from": "user_applications", "to": "applications", "type": "belongsTo" },
+    { "from": "courses", "to": "course_enrollments", "type": "hasMany" },
+    { "from": "course_enrollments", "to": "users", "type": "belongsTo" },
+    { "from": "course_enrollments", "to": "courses", "type": "belongsTo" },
+    { "from": "roadmap_phases", "to": "user_progress", "type": "hasMany" },
+    { "from": "user_progress", "to": "users", "type": "belongsTo" },
+    { "from": "user_progress", "to": "roadmap_phases", "type": "belongsTo" },
+    { "from": "simulations", "to": "users", "type": "belongsTo" }
+  ]
+}

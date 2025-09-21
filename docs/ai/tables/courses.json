@@ -1,0 +1,29 @@
+{
+  "table": "courses",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "title", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "type", "type": "enum", "nullable": false, "default": "Individual Course"},
+    {"name": "duration", "type": "string", "nullable": false, "default": null},
+    {"name": "price", "type": "decimal", "nullable": true, "default": null},
+    {"name": "original_price", "type": "decimal", "nullable": true, "default": null},
+    {"name": "included_courses", "type": "json", "nullable": true, "default": null},
+    {"name": "skills_covered", "type": "json", "nullable": true, "default": null},
+    {"name": "difficulty_level", "type": "string", "nullable": true, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "is_featured", "type": "boolean", "nullable": false, "default": false},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"title": "Data Engineer Starter Pack", "type": "Bundle", "price": 599.00, "skills_covered": ["Python", "SQL", "Statistics"]},
+    {"title": "Python Basics for Data Science", "type": "Individual Course", "price": 199.00, "skills_covered": ["Python", "Data Analysis"]}
+  ],
+  "enumerations": {
+    "type": ["Individual Course", "Bundle"]
+  },
+  "ai_relevance": ["title", "description", "type", "skills_covered", "difficulty_level"]
+}

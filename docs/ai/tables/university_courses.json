@@ -1,0 +1,31 @@
+{
+  "table": "university_courses",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "university_name", "type": "string", "nullable": false, "default": null},
+    {"name": "course_name", "type": "string", "nullable": false, "default": null},
+    {"name": "course_code", "type": "string", "nullable": false, "default": null},
+    {"name": "description", "type": "text", "nullable": false, "default": null},
+    {"name": "level", "type": "enum", "nullable": false, "default": null},
+    {"name": "duration_years", "type": "integer", "nullable": false, "default": null},
+    {"name": "tuition_fee", "type": "decimal", "nullable": true, "default": null},
+    {"name": "entry_requirements", "type": "string", "nullable": false, "default": null},
+    {"name": "subjects_required", "type": "json", "nullable": false, "default": null},
+    {"name": "career_paths", "type": "json", "nullable": false, "default": null},
+    {"name": "faculty", "type": "string", "nullable": false, "default": null},
+    {"name": "campus_location", "type": "string", "nullable": false, "default": null},
+    {"name": "is_active", "type": "boolean", "nullable": false, "default": true},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [],
+  "sample_rows": [
+    {"university_name": "Universiti Malaya (UM)", "course_name": "Bachelor of Computer Science (Data Science)", "level": "Bachelor", "career_paths": ["Data Engineer", "Data Scientist"]},
+    {"university_name": "Universiti Teknologi Malaysia (UTM)", "course_name": "Bachelor of Engineering (Computer Science)", "level": "Bachelor", "career_paths": ["Data Engineer", "Software Engineer"]}
+  ],
+  "enumerations": {
+    "level": ["Foundation", "Diploma", "Bachelor", "Master", "PhD"]
+  },
+  "ai_relevance": ["university_name", "course_name", "description", "level", "entry_requirements", "subjects_required", "career_paths"]
+}

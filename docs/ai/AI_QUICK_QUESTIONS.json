@@ -1,0 +1,118 @@
+[
+  {
+    "intent_id": "requirements_for_course",
+    "label": "What are the requirements for Computer Science?",
+    "source": ["pathway_requirements", "pathways"],
+    "join": "pathway_requirements.pathway_id = pathways.id",
+    "by_user_fk": false,
+    "params": {
+      "course": "Computer Science"
+    },
+    "answer_fields": ["description", "minimum_grade", "subject_name"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT pr.description, pr.minimum_grade, pr.subject_name FROM pathway_requirements pr JOIN pathways p ON p.id = pr.pathway_id WHERE LOWER(p.name) LIKE LOWER(:course) LIMIT 5;"
+  },
+  {
+    "intent_id": "compare_entry_routes",
+    "label": "Compare STPM vs Foundation",
+    "source": ["pathways"],
+    "join": "",
+    "by_user_fk": false,
+    "params": {},
+    "answer_fields": ["name", "total_duration", "competitiveness"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT name, total_duration, competitiveness FROM pathways WHERE name IN ('STPM → Degree', 'Foundation → Degree');"
+  },
+  {
+    "intent_id": "eligibility_hint_from_scores",
+    "label": "How to improve my pathway eligibility?",
+    "source": ["pathway_requirements", "academic_subjects"],
+    "join": "academic_subjects.user_id = pathway_requirements.user_id (conceptual)",
+    "by_user_fk": true,
+    "params": {},
+    "answer_fields": ["subject_name", "minimum_grade"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT pr.subject_name, pr.minimum_grade FROM pathway_requirements pr JOIN academic_subjects ac ON ac.user_id = :user_id WHERE ac.grade < pr.minimum_grade LIMIT 3;"
+  },
+  {
+    "intent_id": "deadlines_this_month",
+    "label": "Deadlines this month",
+    "source": ["deadlines", "applications"],
+    "join": "deadlines.application_id = applications.id",
+    "by_user_fk": false,
+    "params": {},
+    "answer_fields": ["title", "due_date", "name"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT d.title, d.due_date, a.name FROM deadlines d JOIN applications a ON a.id = d.application_id WHERE MONTH(d.due_date) = MONTH(CURRENT_DATE) AND YEAR(d.due_date) = YEAR(CURRENT_DATE) ORDER BY d.due_date;"
+  },
+  {
+    "intent_id": "university_offerings_cs",
+    "label": "Universities offering Computer Science",
+    "source": ["university_courses"],
+    "join": "",
+    "by_user_fk": false,
+    "params": {
+      "discipline": "Computer Science"
+    },
+    "answer_fields": ["university_name", "course_name", "duration_years"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT university_name, course_name, duration_years FROM university_courses WHERE LOWER(course_name) LIKE LOWER(:discipline) LIMIT 10;"
+  },
+  {
+    "intent_id": "top_career_matches",
+    "label": "My top career matches",
+    "source": ["career_matches", "careers"],
+    "join": "career_matches.career_id = careers.id",
+    "by_user_fk": true,
+    "params": {},
+    "answer_fields": ["title", "match_percentage", "matching_factors"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT c.title, cm.match_percentage, cm.matching_factors FROM career_matches cm JOIN careers c ON c.id = cm.career_id WHERE cm.user_id = :user_id ORDER BY cm.match_percentage DESC LIMIT 5;"
+  },
+  {
+    "intent_id": "roadmap_next_actions",
+    "label": "What should I do next?",
+    "source": ["user_progress", "roadmap_phases"],
+    "join": "user_progress.roadmap_phase_id = roadmap_phases.id",
+    "by_user_fk": true,
+    "params": {},
+    "answer_fields": ["task_name", "status", "name"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT up.task_name, up.status, rp.name FROM user_progress up JOIN roadmap_phases rp ON rp.id = up.roadmap_phase_id WHERE up.user_id = :user_id AND up.status != 'Completed' ORDER BY rp.order LIMIT 3;"
+  },
+  {
+    "intent_id": "subjects_needed_stpm_cs",
+    "label": "STPM subjects needed for CS",
+    "source": ["pathway_requirements", "pathways"],
+    "join": "pathway_requirements.pathway_id = pathways.id",
+    "by_user_fk": false,
+    "params": {},
+    "answer_fields": ["subject_name", "minimum_grade"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT pr.subject_name, pr.minimum_grade FROM pathway_requirements pr JOIN pathways p ON p.id = pr.pathway_id WHERE pr.requirement_type = 'STPM' AND LOWER(p.name) LIKE '%computer science%' LIMIT 5;"
+  },
+  {
+    "intent_id": "matriculation_vs_stpm_speed",
+    "label": "Which is faster: STPM or Matriculation?",
+    "source": ["pathways"],
+    "join": "",
+    "by_user_fk": false,
+    "params": {},
+    "answer_fields": ["name", "total_duration"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT name, total_duration FROM pathways WHERE name LIKE '%STPM%' OR name LIKE '%Matriculation%';"
+  },
+  {
+    "intent_id": "next_deadline_for_program",
+    "label": "Next deadline for <program>",
+    "source": ["deadlines", "applications"],
+    "join": "deadlines.application_id = applications.id",
+    "by_user_fk": false,
+    "params": {
+      "program_name": "UPU"
+    },
+    "answer_fields": ["title", "due_date", "name"],
+    "guardrails": "I don't have enough data for that yet.",
+    "retrieval_stub": "SELECT d.title, MIN(d.due_date) as due_date, a.name FROM deadlines d JOIN applications a ON a.id = d.application_id WHERE LOWER(a.name) LIKE LOWER(:program_name) GROUP BY a.name, d.title ORDER BY due_date LIMIT 1;"
+  }
+]

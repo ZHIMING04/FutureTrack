@@ -1,39 +1,111 @@
 import React, { useState } from 'react';
-import { router } from '@inertiajs/react';
+import axios from 'axios';
+
+// Sanitize AI messages to remove debug/reference tokens
+const sanitizeAiText = (raw) => {
+    if (!raw) return raw;
+    // Remove reference/debug tags like pathway_requirements#1,2,3,4,5
+    return raw
+        .replace(/(?:^|\s)([a-z_]+#[\d,]+)(?=$|\s|[.,;:!?)\]]+)/gi, '')
+        .replace(/[ \t]+\n/g, '\n')  // trim trailing spaces before newlines
+        .replace(/\n{3,}/g, '\n\n')  // collapse huge gaps
+        .trim();
+};
 
 export default function AIChatInterface({ chatHistory, quickQuestions, features }) {
+    const [messages, setMessages] = useState(chatHistory || []);
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSendMessage = (e) => {
+    const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!message.trim() || isLoading) return;
 
+        const userMessage = {
+            id: Date.now(),
+            sender: 'user',
+            message: message.trim(),
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setMessage('');
         setIsLoading(true);
-        
-        // Send message to backend
-        router.post('/mentors-guidance/send-message', {
-            message: message
-        }, {
-            onSuccess: () => {
-                setMessage('');
-                setIsLoading(false);
-            },
-            onError: () => {
-                setIsLoading(false);
-            }
-        });
+
+        try {
+            const response = await axios.post('/ai/mentor/free_text', {
+                text: userMessage.message
+            });
+
+            const aiMessage = {
+                id: Date.now() + 1,
+                sender: 'ai-mentor',
+                message: response.data.answer,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                sources: response.data.sources || []
+            };
+
+            setMessages(prev => [...prev, aiMessage]);
+        } catch (error) {
+            console.error('Error sending message:', error);
+            const errorMessage = {
+                id: Date.now() + 1,
+                sender: 'ai-mentor',
+                message: 'Sorry, I encountered an error. Please try again.',
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleQuickQuestion = (question) => {
-        setMessage(question);
+    const handleQuickQuestion = async (question) => {
+        const userMessage = {
+            id: Date.now(),
+            sender: 'user',
+            message: question.label,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post('/ai/mentor', {
+                intent_id: question.intent_id,
+                params: question.params || {}
+            });
+
+            const aiMessage = {
+                id: Date.now() + 1,
+                sender: 'ai-mentor',
+                message: response.data.answer,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                sources: response.data.sources || [],
+                intent_id: response.data.intent_id
+            };
+
+            setMessages(prev => [...prev, aiMessage]);
+        } catch (error) {
+            console.error('Error with quick question:', error);
+            const errorMessage = {
+                id: Date.now() + 1,
+                sender: 'ai-mentor',
+                message: 'Sorry, I encountered an error. Please try again.',
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Chat Interface */}
             <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-96 flex flex-col">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-[calc(100vh-12rem)] flex flex-col">
                     {/* Chat Header */}
                     <div className="p-4 border-b border-gray-200 bg-blue-50">
                         <div className="flex items-center space-x-3">
@@ -51,7 +123,7 @@ export default function AIChatInterface({ chatHistory, quickQuestions, features 
 
                     {/* Chat Messages */}
                     <div className="flex-1 p-4 overflow-y-auto space-y-4">
-                        {chatHistory.map((msg) => (
+                        {messages.map((msg) => (
                             <div
                                 key={msg.id}
                                 className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -63,7 +135,21 @@ export default function AIChatInterface({ chatHistory, quickQuestions, features 
                                             : 'bg-gray-100 text-gray-900'
                                     }`}
                                 >
-                                    <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                                    <p className="text-sm whitespace-pre-wrap">
+                                        {msg.sender === 'ai-mentor' ? sanitizeAiText(msg.message) : msg.message}
+                                    </p>
+                                    {msg.sources && msg.sources.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-1">
+                                            {msg.sources.map((source, idx) => (
+                                                <span
+                                                    key={idx}
+                                                    className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded"
+                                                >
+                                                    {source.table}#{source.ids?.join(',') || 'N/A'}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                     <p className="text-xs mt-1 opacity-75">{msg.timestamp}</p>
                                 </div>
                             </div>
@@ -107,13 +193,15 @@ export default function AIChatInterface({ chatHistory, quickQuestions, features 
             <div className="space-y-6">
                 {/* AI Features */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">AI Mentor Features</h3>
+                    <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        AI Mentor Features
+                    </h3>
                     <div className="space-y-4">
                         {features.map((feature, index) => (
                             <div key={index} className="flex items-start space-x-3">
                                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
                                 </div>
                                 <div>
@@ -133,9 +221,10 @@ export default function AIChatInterface({ chatHistory, quickQuestions, features 
                             <button
                                 key={index}
                                 onClick={() => handleQuickQuestion(question)}
-                                className="w-full text-left p-3 text-sm text-gray-700 hover:bg-gray-50 rounded-md border border-gray-200 hover:border-blue-300 transition-colors"
+                                disabled={isLoading}
+                                className="w-full text-left p-3 text-sm text-gray-700 hover:bg-gray-50 rounded-md border border-gray-200 hover:border-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {question}
+                                {question.label}
                             </button>
                         ))}
                     </div>

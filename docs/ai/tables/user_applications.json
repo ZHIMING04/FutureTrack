@@ -1,0 +1,24 @@
+{
+  "table": "user_applications",
+  "columns": [
+    {"name": "id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "user_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "application_id", "type": "bigint", "nullable": false, "default": null},
+    {"name": "status", "type": "enum", "nullable": false, "default": "Not Started"},
+    {"name": "submitted_documents", "type": "json", "nullable": true, "default": null},
+    {"name": "notes", "type": "text", "nullable": true, "default": null},
+    {"name": "submitted_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "created_at", "type": "timestamp", "nullable": true, "default": null},
+    {"name": "updated_at", "type": "timestamp", "nullable": true, "default": null}
+  ],
+  "primaryKey": ["id"],
+  "foreignKeys": [
+    {"column": "user_id", "refTable": "users", "refColumn": "id", "onDelete": "cascade"},
+    {"column": "application_id", "refTable": "applications", "refColumn": "id", "onDelete": "cascade"}
+  ],
+  "sample_rows": [],
+  "enumerations": {
+    "status": ["Not Started", "In Progress", "Submitted", "Under Review", "Accepted", "Rejected"]
+  },
+  "ai_relevance": ["status"]
+}
