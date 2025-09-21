@@ -65,7 +65,7 @@ class WhatIfSimulatorController extends Controller
                     'mathematics' => ['current' => $currentGrades['Mathematics'] ?? 0, 'target' => 4.0],
                     'additionalMathematics' => ['current' => $currentGrades['Additional Mathematics'] ?? 0, 'target' => 3.3],
                     'scienceAverage' => ['current' => $currentGrades['Physics'] ?? 0, 'target' => 3.7],
-                    'preUniversityCGPA' => ['target' => 3.2]
+                    'preUniversityCGPA' => ['current' => 0, 'target' => 3.2]
                 ]
             ]
         ];
@@ -91,9 +91,12 @@ class WhatIfSimulatorController extends Controller
 
     public function simulate(Request $request)
     {
+        \Log::info('Simulation request received:', $request->all());
+        
         $user = User::first();
         
         if (!$user) {
+            \Log::error('User not found');
             return redirect()->back()->with('error', 'User not found');
         }
 
@@ -104,13 +107,16 @@ class WhatIfSimulatorController extends Controller
 
         $pathway = Pathway::find($request->pathway_id);
         $gradeAdjustments = $request->grade_adjustments;
+        
+        \Log::info('Pathway found:', ['id' => $pathway->id, 'name' => $pathway->name]);
+        \Log::info('Grade adjustments:', $gradeAdjustments);
 
         // Calculate admission likelihood based on grade improvements
         $admissionLikelihood = $this->calculateAdmissionLikelihood($gradeAdjustments, $pathway);
         
         // Calculate timeline and cost
-        $timeline = $pathway->total_duration;
-        $estimatedCost = $pathway->cost_range;
+        $timeline = $pathway->total_duration ?? '2 years STPM + 4 years degree';
+        $estimatedCost = $pathway->cost_range ?? 'RM 18,000 - 28,000';
 
         // Generate risk assessment
         $riskAssessment = $this->generateRiskAssessment($gradeAdjustments, $pathway);
@@ -125,6 +131,8 @@ class WhatIfSimulatorController extends Controller
             'riskAssessment' => $riskAssessment,
             'improvementSuggestions' => $improvementSuggestions
         ];
+
+        \Log::info('Simulation result:', $simulationResult);
 
         return response()->json($simulationResult);
     }
@@ -164,8 +172,13 @@ class WhatIfSimulatorController extends Controller
 
     private function calculateAdmissionLikelihood($gradeAdjustments, $pathway)
     {
+        // Extract target values from grade adjustments
+        $targetValues = array_map(function($subject) {
+            return $subject['target'] ?? 0;
+        }, $gradeAdjustments);
+        
         // Simple calculation based on grade improvements
-        $averageImprovement = array_sum($gradeAdjustments) / count($gradeAdjustments);
+        $averageImprovement = array_sum($targetValues) / count($targetValues);
         $baseLikelihood = 70; // Base likelihood
         $improvementFactor = ($averageImprovement - 3.0) * 10; // Scale improvement
         
@@ -176,7 +189,7 @@ class WhatIfSimulatorController extends Controller
     {
         $risks = [];
         
-        if ($gradeAdjustments['additionalMathematics'] < 3.5) {
+        if (($gradeAdjustments['additionalMathematics']['target'] ?? 0) < 3.5) {
             $risks[] = [
                 'type' => 'warning',
                 'message' => 'Additional Mathematics grade may limit STEM program options',
@@ -184,7 +197,7 @@ class WhatIfSimulatorController extends Controller
             ];
         }
 
-        if ($gradeAdjustments['mathematics'] < 3.7) {
+        if (($gradeAdjustments['mathematics']['target'] ?? 0) < 3.7) {
             $risks[] = [
                 'type' => 'warning',
                 'message' => 'Mathematics grade below A- may affect competitive programs',
@@ -199,11 +212,11 @@ class WhatIfSimulatorController extends Controller
     {
         $suggestions = [];
         
-        if ($gradeAdjustments['mathematics'] < 4.0) {
+        if (($gradeAdjustments['mathematics']['target'] ?? 0) < 4.0) {
             $suggestions[] = 'Focus on strengthening Mathematics fundamentals';
         }
         
-        if ($gradeAdjustments['additionalMathematics'] < 3.5) {
+        if (($gradeAdjustments['additionalMathematics']['target'] ?? 0) < 3.5) {
             $suggestions[] = 'Practice more Additional Mathematics problems';
         }
 
